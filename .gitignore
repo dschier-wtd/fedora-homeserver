@@ -1,0 +1,52 @@
+# reference: https://git-scm.com/docs/gitignore
+
+# ansible
+*.retry
+
+# compiled source
+bin/
+*.com
+*.class
+*.dll
+*.exe
+*.o
+*.so
+
+# database
+*.sql
+*.sqlite
+
+# lock files
+*.lock
+package-lock.json
+
+# logs
+logs/
+*.log
+
+# OS generated files
+.DS_Store*
+ehthumbs.db
+Icon?
+Thumbs.db
+
+# packages
+*.7z
+*.dmg
+*.gz
+*.iso
+*.rar
+*.tar
+*.zip
+
+# python
+*.py[cod]
+__pycache__/
+
+# temporary files
+*.swp
+*.swo
+*~
+
+# Vagrant
+.vagrant/

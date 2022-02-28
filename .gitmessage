@@ -1,0 +1,28 @@
+#<--- 72 characters --------------------------------------------------->
+#
+# Thank you so much for your contribution! Below you can find the
+# pattern, some explanation and an example for a proper commit message.
+# Please also consider to edit your contribution in the 'KUDOS.txt' in
+# the repository, update the CHANGELOG.md and to sign your commit.
+#
+#<--- pattern --------------------------------------------------------->
+#
+# (Feature|Fix|Refactor|Document): <SUBJECT>
+#
+# The body, explains the change a little bit more. You can:
+#
+# - you can use
+# - bullet points
+#
+# Adding a footer to address the issue is recommended.
+#
+# - resolves: #0815
+# - addresses: #4711
+#
+#<--- usage ----------------------------------------------------------->
+#
+# To apply this kind of template, you can configure git.
+#
+# `git config commit.template .gitmessage`
+#
+#<--- 72 characters --------------------------------------------------->

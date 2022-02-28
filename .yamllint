@@ -1,0 +1,19 @@
+---
+# reference: https://yamllint.readthedocs.io/
+
+extends: "default"
+
+rules:
+
+  braces:
+    max-spaces-inside: 1
+    level: "error"
+
+  brackets:
+    max-spaces-inside: 1
+    level: "error"
+
+  quoted-strings:
+    quote-type: "any"
+    required: true
+...

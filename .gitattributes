@@ -1,0 +1,19 @@
+# reference: https://git-scm.com/docs/gitattributes
+
+# end of line conversion
+
+* text=auto
+
+# ignore for export / release
+
+/.github export-ignore
+/assets export-ignore
+/docs export-ignore
+/tests export-ignore
+/tools export-ignore
+
+.editorconfig export-ignore
+.gitattributes export-ignore
+.gitignore export-ignore
+.gitmessages export-ignore
+.yamllint export-ignore
