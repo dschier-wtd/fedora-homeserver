@@ -1,0 +1,47 @@
+---
+# reference: https://cirrus-ci.org/guide/writing-tasks/
+
+container:
+  cpu: 1
+  memory: "2G"
+
+# Sanity checks
+lint_markdown_task:
+  name: "Lint Markdown"
+  container:
+    image: "docker.io/library/node:latest"
+  install_script: "npm install -g markdownlint-cli"
+  lint_script: "markdownlint *.md docs/*.md"
+
+lint_yaml_task:
+  name: "Lint YAML"
+  container:
+    image: "docker.io/library/alpine:latest"
+  install_script: "apk update && apk add yamllint"
+  lint_script: "yamllint ."
+
+lint_ansible_task:
+  name: "Lint Ansible"
+  container:
+    image: "quay.io/ansible/creator-ee:latest"
+  lint_script: "ansible-lint ansible/"
+
+test_ansible_task:
+  name: "Check Ansible"
+  container:
+    image: "quay.io/ansible/creator-ee:latest"
+  install_script: "ansible-galaxy collection install
+                  -r ansible/requirements.yml"
+  test_configure_script: "ansible-playbook --syntax-check
+                          ansible/playbooks/configure.yml"
+  test_update_script: "ansible-playbook --syntax-check
+                      ansible/playbooks/configure.yml"
+
+lint_kickstart_task:
+  name: "Lint Kickstart"
+  container:
+    image: "docker.io/library/fedora:35"
+  install_script: "dnf in -y pykickstart"
+  lint_base_script: "ksvalidator -i kickstart/base_ks.cfg"
+  lint_full_script: "ksvalidator -i kickstart/full_ks.cfg"
+...
