@@ -19,7 +19,7 @@
     - name: "Manage system Update"
       ansible.builtin.package:
         name: "*"
-        state: "latest"
+        state: "latest" # noqa package-latest
       become: true
       notify:
         - "Reboot system"
