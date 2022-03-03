@@ -18,13 +18,13 @@
       community.general.timezone:
         name: "{{ system.timezone }}"
       become: true
-      
+
     - name: "Manage chrony Packages"
       ansible.builtin.package:
         name: "chrony"
         state: "present"
       become: true
- 
+
     - name: "Manage chrony Services"
       ansible.builtin.service:
         name: "chronyd.service"
@@ -48,7 +48,7 @@
         name: "tuned"
         state: "present"
       become: true
-      
+
     - name: "Manage tuned Service"
       ansible.builtin.service:
         name: "tuned.service"

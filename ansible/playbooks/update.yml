@@ -3,19 +3,19 @@
 
 - name: "Update homeserver"
   hosts: "all"
-  
+
   vars_files:
     - "../manifest.yml"
-  
+
   handlers:
-  
+
     - name: "Reboot system"
       ansible.builtin.reboot:
         reboot_timeout: 1800
       become: true
-      
+
   tasks:
-  
+
     - name: "Manage system Update"
       ansible.builtin.package:
         name: "*"

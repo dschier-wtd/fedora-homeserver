@@ -31,7 +31,7 @@ look at the below list of articles and work your way from there.
 
 - [Fedora - Home Server Series](https://blog.while-true-do.io/fedora-home-server-intro-concept/)
 - [Spotlight - Fedora Server](https://blog.while-true-do.io/spotlight-fedora-server/)
-- [Git - Getting Started]()https://blog.while-true-do.io/git-getting-started/
+- [Git - Getting Started](https://blog.while-true-do.io/git-getting-started/)
 - [Ansible - Getting Started](https://blog.while-true-do.io/ansible-getting-started/)
 - [Podman - Getting Started](https://blog.while-true-do.io/podman-getting-started/)
 
@@ -93,11 +93,11 @@ steps for you.
 3. Set the timezone to Etc/UTC
 4. Set the keyboard layout to US
 5. Set the language to en_US
-5. Install packages
+6. Install packages
    - core
    - Cockpit
    - Ansible
-   
+
 Starting an installation via Kickstart is pretty easy:
 
 1. Boot from USB media
@@ -107,7 +107,7 @@ Starting an installation via Kickstart is pretty easy:
    ![Fedora Install Grub](./assets/fedora_install_grub.png)
 4. Continue and the installer will do its work.
    ![Fedora Install Kickstart](./assets/fedora_install_kickstart.png)
-4. Wait until the system is rebooted and login with the default credentials.
+5. Wait until the system is rebooted and login with the default credentials.
    - **user: admin**
    - **pass: password**
 

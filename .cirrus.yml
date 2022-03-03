@@ -24,6 +24,8 @@ lint_ansible_task:
   name: "Lint Ansible"
   container:
     image: "quay.io/ansible/creator-ee:latest"
+  install_script: "ansible-galaxy collection install
+                  -r ansible/requirements.yml"
   lint_script: "ansible-lint ansible/"
 
 test_ansible_task:
@@ -35,7 +37,7 @@ test_ansible_task:
   test_configure_script: "ansible-playbook --syntax-check
                           ansible/playbooks/configure.yml"
   test_update_script: "ansible-playbook --syntax-check
-                      ansible/playbooks/configure.yml"
+                      ansible/playbooks/update.yml"
 
 lint_kickstart_task:
   name: "Lint Kickstart"
