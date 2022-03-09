@@ -163,6 +163,8 @@ I am not a fan of auto-updates (downloading updates is fine, though) and the
 playbook will ensure that you can update and reboot whenever you feel
 comfortable.
 
+<!--
+
 ### Auto Configuration
 
 The "configure.yml" playbook can be used as described above, but there is also
@@ -179,6 +181,7 @@ addition:
 
 If this is done, systemd will execute ansible-pull on schedule. The changes will
 be rolled out to the machine automatically.
+-->
 
 ## License
 
