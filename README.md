@@ -30,6 +30,7 @@ learn more about some of the used technologies and software, I reommend having a
 look at the below list of articles and work your way from there.
 
 - [Fedora - Home Server Series](https://blog.while-true-do.io/fedora-home-server-intro-concept/)
+- [Kickstart - Getting Started](https://blog.while-true-do.io/kickstart-getting-started/)
 - [Spotlight - Fedora Server](https://blog.while-true-do.io/spotlight-fedora-server/)
 - [Git - Getting Started](https://blog.while-true-do.io/git-getting-started/)
 - [Ansible - Getting Started](https://blog.while-true-do.io/ansible-getting-started/)
@@ -90,7 +91,7 @@ steps for you.
 
 1. Create a user and password
 2. Partition disk 1
-3. Set the timezone to Etc/UTC
+3. Set the timezone to UTC
 4. Set the keyboard layout to US
 5. Set the language to en_US
 6. Install packages

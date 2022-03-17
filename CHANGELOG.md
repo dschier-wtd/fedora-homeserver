@@ -11,6 +11,8 @@ This file is the changelog of [fedora-homeserver](https://github.com/dschier-wtd
 - Added: kickstart samples
 - Added: configure playbook
 - Added: update playbook
+- Updated: Kickstart
+- Updated: documentation
 
 ## [MAJOR.MINOR.PATCH-LABEL] - YYYYMMDD
 
