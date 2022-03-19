@@ -9,11 +9,13 @@
 
   tasks:
 
+    # Hostname
     - name: "Configure hostname"
       ansible.builtin.hostname:
         name: "{{ system.hostname }}"
       become: true
 
+    # Time
     - name: "Configure timezone"
       community.general.timezone:
         name: "{{ system.timezone }}"
@@ -32,17 +34,50 @@
         enabled: true
       become: true
 
+    # Core Packages
     - name: "Manage cli Packages"
       ansible.builtin.package:
         name:
           - "bash"
           - "bash-completion"
+          - "curl"
           - "tmux"
           - "wget"
-          - "curl"
+          - "vim"
         state: "present"
       become: true
 
+    # SELinux
+    - name: "Manage SELinux Packages"
+      ansible.builtin.package:
+        name:
+          - "libselinux"
+          - "libselinux-utils"
+          - "setroubleshoot-server"
+        state: "present"
+      become: true
+
+    - name: "Manage SELinux Configuration"
+      ansible.posix.selinux:
+        policy: "targeted"
+        state: "enforcing"
+      become: true
+
+    # Firewall
+    - name: "Manage firewalld Packages"
+      ansible.builtin.package:
+        name: "firewalld"
+        state: "present"
+      become: true
+
+    - name: "Manage firewalld Services"
+      ansible.builtin.service:
+        name: "firewalld.service"
+        state: "started"
+        enabled: true
+      become: true
+
+    # Tuned / Power Saving
     - name: "Manage tuned Packages"
       ansible.builtin.package:
         name: "tuned"
