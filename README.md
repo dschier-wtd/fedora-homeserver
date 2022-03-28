@@ -41,6 +41,20 @@ may give an idea how you can put some workload on your server.
 
 - [Tag - Guide](https://blog.while-true-do.io/tag/guide/)
 
+### Features
+
+The result of the below configurations is a Home Server, that can be used for
+self-hosting, experimenting with new services and home services. It provides a
+web interface, container and virtual machine capabilities and some useful
+services for a home lab.
+
+![Screenshot Cockpit](assets/fedora_homeserver_cockpit.png)
+
+The pre-configured software includes [podman](https://podman.io),
+[kvm](https://www.linux-kvm.org/page/Main_Page),
+[Cockpit](https://cockpit-project.org), [Performance Co-Pilot](https://pcp.io)
+and many more.
+
 ### Requirements
 
 For testing purposes, you need an x86_64 machine/virtual machine with at least
@@ -131,6 +145,9 @@ used on basically every Fedora Linux Server installation. It will:
 - Install and configure chrony (NTP)
 - Install and configure some CLI tools
 - Install and configure tuned (power profiles)
+- Install and configure Avahi (mDNS provider)
+- Install and configure Cockpit (Admin Web UI)
+- Install and configure Performance Co-Pilot (performance metrics system)
 
 To apply the playbook, you just need to run it from your workstation.
 
