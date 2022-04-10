@@ -131,10 +131,17 @@ additional software via Ansible as explained in the next section.
 
 ### Customization
 
-Customizing the Ansible Playbook behavior can be done with the
-[manifest.yml](./ansible/manifest.yml) in the repository. Just change it to
-your liking and run the playbook as described in the above sections. Each
-option is documented in the "manifest.yml".
+Instead of providing and maintaining an inventory, I decided to use a
+[manifest.yml](./ansible/manifest.yml). This makes customizing the Ansible
+Playbook easier and straight forward.
+
+Just change it to your liking and run the playbook as described in the above
+sections. Each option is documented in the "manifest.yml".
+
+If you want to configure the behaviour with an inventory instead, you can do
+this, too. You can read more about Ansible inventories in another
+[blog article](https://blog.while-true-do.io/ansible-inventories-1/) and the
+[upstream documentation](https://docs.ansible.com/ansible/latest/user_guide/playbooks_inventory.html).
 
 ### Configuration
 
