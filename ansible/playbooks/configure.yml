@@ -1,5 +1,5 @@
 ---
-# ansible playbook for github.com/dschier-wtd/fedora-homeserver
+# ansible/playbooks/configure.yml
 
 - name: "Configure Fedora Homeserver"
   hosts: "all"
@@ -157,4 +157,79 @@
       loop:
         - "pmcd.service"
         - "pmlogger.service"
+
+    # Virtualization
+
+    - name: "Manage Virtualization Packages"
+      ansible.builtin.package:
+        name:
+          - "libvirt"
+          - "libvirt-client"
+          - "libvirt-daemon-config-network"
+          - "qemu-kvm"
+        state: "present"
+      become: true
+      tags:
+        - "kvm"
+
+    - name: "Manage Virtualization Services"
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: "started"
+        enabled: true
+      become: true
+      loop:
+        - "virtqemud.service"
+        - "virtnetworkd.service"
+      tags:
+        - "kvm"
+
+    - name: "Manage cockpit Machines Packages"
+      ansible.builtin.package:
+        name: "cockpit-machines"
+        state: "present"
+      become: true
+      notify:
+        - "Restart cockpit Service"
+      tags:
+        - "cockpit"
+        - "kvm"
+
+    # Virtualization Networking
+
+    - name: "Manage physical bridge Device"
+      community.general.nmcli:
+        type: "bridge"
+        conn_name: "phybr0"
+        ifname: "phybr0"
+        stp: true
+        state: present
+      become: true
+      tags:
+        - "network"
+
+    - name: "Manage physical bridge Member"
+      community.general.nmcli:
+        conn_name: "eno1"
+        ifname: "eno1"
+        type: "bridge-slave"
+        master: "phybr0"
+        state: "present"
+      become: true
+      tags:
+        - "network"
+
+    - name: "Manage virtual bridge Network"
+      community.libvirt.virt_net:
+        command: "define"
+        name: "bridge"
+        xml: "{{ lookup('template','libvirt_net_bridge.xml.j2') }}"
+      become: true
+
+    - name: "Manage virtual bridge State"
+      community.libvirt.virt_net:
+        name: "bridge"
+        autostart: true
+        state: "active"
+      become: true
 ...

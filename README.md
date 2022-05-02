@@ -155,15 +155,17 @@ used on basically every Fedora Linux Server installation. It will:
 - Install and configure Avahi (mDNS provider)
 - Install and configure Cockpit (Admin Web UI)
 - Install and configure Performance Co-Pilot (performance metrics system)
+- Install and configure KVM and libvirt
+- Configure a bridge network for the virtual machines
 
 To apply the playbook, you just need to run it from your workstation.
 
-```shell
+```bash
 # Run the playbook (dry-run)
-$ ansible-playbook -i IP_ADDRESS, --check ansible/playbooks/homeserver.yml
+$ ansible-playbook -i IP_ADDRESS, --check --diff ansible/playbooks/configure.yml
 
 # Run the playbook (for real)
-$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/homeserver.yml
+$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/configure.yml
 ```
 
 ### Update
@@ -176,37 +178,17 @@ can be used to keep your machine updated. It will:
 
 You can apply it the same way as the "configure.yml" playbook.
 
-```shell
+```bash
 # Run the playbook (dry-run)
-$ ansible-playbook -i IP_ADDRESS, --check ansible/playbooks/homeserver.yml
+$ ansible-playbook -i IP_ADDRESS, --check ansible/playbooks/update.yml
 
 # Run the playbook (for real)
-$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/homeserver.yml
+$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/update.yml
 ```
 
 I am not a fan of auto-updates (downloading updates is fine, though) and the
 playbook will ensure that you can update and reboot whenever you feel
 comfortable.
-
-<!--
-
-### Auto Configuration
-
-The "configure.yml" playbook can be used as described above, but there is also
-an option to apply each change in a repository automatically. This functionality
-is known as
-[ansible-pull](https://docs.ansible.com/ansible/latest/cli/ansible-pull.html).
-
-You can opt-in to the behavior and the "configure.yml" will do these steps in
-addition:
-
-- install and configure ansible
-- configure an ansible-pull systemd service
-- configure an ansible-pull systemd timer
-
-If this is done, systemd will execute ansible-pull on schedule. The changes will
-be rolled out to the machine automatically.
--->
 
 ## License
 
