@@ -18,6 +18,13 @@
         - "cockpit"
         - "kvm"
 
+    - name: "Restart system"
+      ansible.builtin.reboot:
+        reboot_timeout: "3600"
+      become: true
+      tags:
+        - "network"
+
   tasks:
 
     # Hostname
@@ -227,6 +234,8 @@
         stp: true
         state: present
       become: true
+      notify:
+        - "Restart system"
       tags:
         - "network"
 
@@ -238,6 +247,8 @@
         master: "phybr0"
         state: "present"
       become: true
+      notify:
+        - "Restart system"
       tags:
         - "network"
 
