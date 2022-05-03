@@ -232,7 +232,7 @@
         conn_name: "phybr0"
         ifname: "phybr0"
         stp: true
-        state: present
+        state: "present"
       become: true
       notify:
         - "Restart system"
