@@ -7,6 +7,17 @@
   vars_files:
     - "../manifest.yml"
 
+  handlers:
+
+    - name: "Restart Cockpit Socket"
+      ansible.builtin.service:
+        name: "cockpit.socket"
+        state: "restarted"
+      become: true
+      tags:
+        - "cockpit"
+        - "kvm"
+
   tasks:
 
     # Hostname
@@ -196,6 +207,17 @@
         - "kvm"
 
     # Virtualization Networking
+
+    - name: "Manage network Packages"
+      ansible.builtin.package:
+        name:
+          - "bridge-utils"
+          - "python-lxml"
+        state: "present"
+      become: true
+      tags:
+        - "kvm"
+        - "network"
 
     - name: "Manage physical bridge Device"
       community.general.nmcli:

@@ -13,6 +13,7 @@ This file is the changelog of [fedora-homeserver](https://github.com/dschier-wtd
 - Added: update playbook
 - Updated: Kickstart
 - Updated: documentation
+- Added: Virtualization
 
 ## [MAJOR.MINOR.PATCH-LABEL] - YYYYMMDD
 
