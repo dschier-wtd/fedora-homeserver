@@ -190,6 +190,18 @@ I am not a fan of auto-updates (downloading updates is fine, though) and the
 playbook will ensure that you can update and reboot whenever you feel
 comfortable.
 
+### VM Creation
+
+In case you are using the virtualization, I have provided a playbook to create
+Virtual Maschines. It will prompt you for some information and create the VM.
+
+```bash
+# Create a VM
+$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/create_vm.yml
+```
+
+Afterwards, you will be able to log in to the new machine.
+
 ## License
 
 Except otherwise noted, all work is [licensed](LICENSE) under a

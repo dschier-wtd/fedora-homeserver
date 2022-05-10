@@ -1,0 +1,129 @@
+---
+- name: "Create Virtual Machine"
+  hosts: "all"
+  gather_facts: false
+
+  vars:
+
+    libvirt_directory: "/var/lib/libvirt"
+    libvirt_image_directory: "{{ libvirt_directory }}/images"
+    libvirt_base_directory: "{{ libvirt_directory }}/base"
+    libvirt_boot_directory: "{{ libvirt_directory }}/boot"
+
+    fedora_cloud_image_name: "Fedora-Cloud-Base-35-1.2.x86_64.qcow2"
+    fedora_cloud_image_url: "https://download.fedoraproject.org/pub/fedora/\
+                              linux/releases/35/Cloud/x86_64/images/\
+                              {{ fedora_cloud_image_name }}"
+
+    vm_image: "{{ fedora_cloud_image_name }}"
+    vm_name: "test01"
+    vm_disk: "10"
+    vm_vcpu: "2"
+    vm_vram: "1024"
+    vm_vnet: "bridge"
+
+  tasks:
+
+    # Download Images
+    - name: "Manage base image Directory"
+      ansible.builtin.file:
+        path: "{{ libvirt_base_directory }}"
+        state: "directory"
+        owner: "root"
+        group: "root"
+        mode: 0755
+      become: true
+
+    - name: "Download Fedora Cloud Base Image"
+      ansible.builtin.get_url:
+        url: "{{ fedora_cloud_image_url }}"
+        dest: "{{ libvirt_base_directory }}"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+
+    # Create Cloud Init Config
+    - name: "Fetch existing VMs"
+      community.libvirt.virt:
+        command: "list_vms"
+      register: "r_existing_vms"
+      changed_when: false
+      become: true
+
+    - name: "Manage boot Directory"
+      ansible.builtin.file:
+        path: "{{ libvirt_boot_directory }}/{{ vm_name }}"
+        state: "directory"
+        owner: "root"
+        group: "root"
+        mode: 0755
+      become: true
+
+    - name: "Create cloud-init user-data"
+      ansible.builtin.template:
+        src: "user-data.j2"
+        dest: "{{ libvirt_boot_directory }}/{{ vm_name }}/user-data"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+      when:
+        - "vm_name not in r_existing_vms.list_vms"
+
+    - name: "Create cloud-init meta-data"
+      ansible.builtin.template:
+        src: "meta-data.j2"
+        dest: "{{ libvirt_boot_directory }}/{{ vm_name }}/meta-data"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+      when:
+        - "vm_name not in r_existing_vms.list_vms"
+
+    - name: "Create cloud-init Image"
+      ansible.builtin.command:
+        cmd: "genisoimage
+              -output cloud-init.iso
+              -volid cidata
+              -joliet
+              -rock
+              user-data
+              meta-data"
+        chdir: "{{ libvirt_boot_directory }}/{{ vm_name }}/"
+      become: true
+      when:
+        - "vm_name not in r_existing_vms.list_vms"
+
+    # Create VM
+
+    - name: "Create VM Disk"
+      ansible.builtin.command:
+        cmd: "qemu-img create
+              -f qcow2
+              -b {{ libvirt_base_directory }}/{{ vm_image }}
+              -F qcow2
+              {{ libvirt_image_directory }}/{{ vm_name }}.qcow2 {{ vm_disk }}G"
+        creates: "{{ libvirt_image_directory }}/{{ vm_name }}.qcow2"
+      become: true
+      when:
+        - "vm_name not in r_existing_vms.list_vms"
+
+    - name: "Define VM"
+      community.libvirt.virt:
+        command: "define"
+        xml: "{{ lookup('template', 'kvm_template_efi.xml.j2') }}"
+        uri: "qemu:///system"
+      become: true
+      when:
+        - "vm_name not in r_existing_vms.list_vms"
+
+    - name: "Start & Autostart VM"
+      community.libvirt.virt:
+        name: "{{ vm_name }}"
+        state: "running"
+        autostart: "true"
+        uri: "qemu:///system"
+      become: true
+...
