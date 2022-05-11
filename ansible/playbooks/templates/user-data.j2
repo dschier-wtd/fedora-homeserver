@@ -1,0 +1,32 @@
+#cloud-config
+
+# host
+preserve_hostname: false
+hostname: "{{ vm_name }}"
+
+timezone: "Etc/UTC"
+
+# user
+disable_root: true
+ssh_pwauth: true
+no_ssh_fingerprints: true
+
+system_info:
+  default_user:
+    name: admin
+    home: /home/admin
+    lock_passwd: false
+    plain_text_passwd: password
+
+ssh:
+  emit_keys_to_console: false
+
+# packages
+package_upgrade: true
+packages:
+  - qemu-guest-agent
+package_reboot_if_required: true
+
+# Commands
+runcmd:
+  - systemctl disable cloud-init.service
