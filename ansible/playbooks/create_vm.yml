@@ -16,11 +16,28 @@
                               {{ fedora_cloud_image_name }}"
 
     vm_image: "{{ fedora_cloud_image_name }}"
-    vm_name: "test01"
-    vm_disk: "10"
-    vm_vcpu: "2"
-    vm_vram: "1024"
     vm_vnet: "bridge"
+
+  vars_prompt:
+
+    - name: "vm_name"
+      prompt: "VM Name"
+      private: false
+
+    - name: "vm_vcpu"
+      prompt: "Virtual CPU Cores?"
+      default: "2"
+      private: false
+
+    - name: "vm_vram"
+      prompt: "Virtual RAM (MB)?"
+      default: "1024"
+      private: false
+
+    - name: "vm_disk"
+      prompt: "Disk Size (GB)?"
+      default: "10"
+      private: false
 
   tasks:
 
