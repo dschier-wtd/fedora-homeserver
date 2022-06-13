@@ -265,4 +265,46 @@
         autostart: true
         state: "active"
       become: true
+
+    # Containers with Podman
+
+    - name: "Manage podman Packages"
+      ansible.builtin.package:
+        name:
+          - "podman"
+        state: "present"
+      become: true
+
+    - name: "Manage cockpit-podman Packages"
+      ansible.builtin.package:
+        name:
+          - "cockpit-podman"
+        state: "present"
+      become: true
+
+    - name: "Manage podman SELinux Booleans"
+      ansible.posix.seboolean:
+        name: "container_connect_any"
+        state: true
+        persistent: true
+      become: true
+
+    - name: "Manage podman Socket"
+      ansible.builtin.service:
+        name: "podman.socket"
+        state: "started"
+        enabled: true
+      become: true
+      loop:
+        - "podman.socket"
+
+    - name: "Manage podman Timers"
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: "started"
+        enabled: true
+      become: true
+      loop:
+        - "podman-auto-update.service"
+        - "podman-auto-update.timer"
 ...
