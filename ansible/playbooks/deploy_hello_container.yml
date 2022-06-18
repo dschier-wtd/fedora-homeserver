@@ -1,0 +1,16 @@
+---
+# ansible/playbooks/deploy_hello_container.yml
+
+- name: "Create a Container"
+  hosts: "all"
+
+  tasks:
+
+    - name: "Run rootful Container"
+      containers.podman.podman_container:
+        name: "hello_world"
+        image: "docker.io/library/nginx"
+        state: "started"
+        publish: "8080:80/tcp"
+      become: true
+...
