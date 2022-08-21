@@ -202,6 +202,17 @@ $ ansible-playbook -i IP_ADDRESS, ansible/playbooks/create_vm.yml
 
 Afterwards, you will be able to log in to the new machine.
 
+### Container Creation
+
+In case you want to deploy containers via Podman on your home server, you can
+have a look at the example playbook
+[deploy_hello_container.yml](./ansible/playbooks/deploy_hello_container.yml).
+
+```bash
+# Create hello-world container
+$ ansible-playbook -i IP_ADDRESS, ansible/playbooks/deploy_hello_container.yml
+```
+
 ## License
 
 Except otherwise noted, all work is [licensed](LICENSE) under a

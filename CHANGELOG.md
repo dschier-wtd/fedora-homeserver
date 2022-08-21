@@ -14,6 +14,8 @@ This file is the changelog of [fedora-homeserver](https://github.com/dschier-wtd
 - Updated: Kickstart
 - Updated: documentation
 - Added: Virtualization
+- Added: containers
+- Updated: Fedora 36 content
 
 ## [MAJOR.MINOR.PATCH-LABEL] - YYYYMMDD
 
