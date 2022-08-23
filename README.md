@@ -213,6 +213,13 @@ have a look at the example playbook
 $ ansible-playbook -i IP_ADDRESS, ansible/playbooks/deploy_hello_container.yml
 ```
 
+### Container Deployments
+
+As an example, but also for some real world usage of the home server, this
+repository includes the below deployments:
+
+- [ntp server in container](./ansible/playbooks/deploy_ntp_container.yml)
+
 ## License
 
 Except otherwise noted, all work is [licensed](LICENSE) under a

@@ -16,6 +16,7 @@ This file is the changelog of [fedora-homeserver](https://github.com/dschier-wtd
 - Added: Virtualization
 - Added: containers
 - Updated: Fedora 36 content
+- Added: container NTP
 
 ## [MAJOR.MINOR.PATCH-LABEL] - YYYYMMDD
 

@@ -1,0 +1,36 @@
+---
+# ansible/playbooks/deploy_ntp_container.yml
+
+- name: "Deploy NTP Container"
+  hosts: "all"
+
+  handlers:
+
+    - name: "Restart container-ntp Service"
+      ansible.builtin.systemd:
+        name: "container-ntp.service"
+        state: "restarted"
+        daemon_reload: true
+      become: true
+
+  tasks:
+
+    - name: "Create container-ntp Service File"
+      ansible.builtin.template:
+        src: "container-ntp.service.j2"
+        dest: "/etc/systemd/system/container-ntp.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+      notify:
+        - "Restart container-ntp Service"
+
+    - name: "Start & Enable container-ntp Service"
+      ansible.builtin.systemd:
+        name: "container-ntp.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
+...
