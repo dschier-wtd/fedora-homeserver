@@ -27,6 +27,7 @@ ExecStart=/usr/bin/podman run \
   --tmpfs=/run/chrony:rw,mode=1750 \
   --tmpfs=/var/lib/chrony:rw,mode=1750 \
   --env NTP_SERVERS="0.pool.ntp.org,1.pool.ntp.org,2.pool.ntp.org" \
+  --io.containers.autoupdate="registry" \
   --name=ntp \
   docker.io/cturra/ntp
 ExecStop=/usr/bin/podman stop \
