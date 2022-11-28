@@ -1,0 +1,47 @@
+[Unit]
+Description=Podman container-pihole-app.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+Type=notify
+NotifyAccess=all
+
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+
+ExecStart=/usr/bin/podman run \
+	--cidfile=%t/%n.ctr-id \
+	--cgroups=no-conmon \
+	--rm \
+	--sdnotify=conmon \
+	--replace \
+	--publish {{ pihole_publish_http }}:80/tcp \
+	--publish {{ pihole_publish_dnsu }}:53/tcp \
+	--publish {{ pihole_publish_dnst }}:53/udp \
+	--detach \
+	--tty \
+	--label "io.containers.autoupdate=registry" \
+	--volume pihole-app-conf:/etc/pihole/:Z \
+	--volume pihole-app-dns:/etc/dnsmasq.d/:Z \
+	--network=pihole \
+	--env "WEBPASSWORD={{ pihole_admin_pass }}" \
+	--env "DNSMASQ_LISTENING=all" \
+	--name=pihole-app \
+	{{ pihole_app_image_name }}:{{ pihole_app_image_tag }}
+
+ExecStop=/usr/bin/podman stop \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+ExecStopPost=/usr/bin/podman rm \
+	--force \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+[Install]
+WantedBy=default.target
