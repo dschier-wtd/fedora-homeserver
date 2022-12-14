@@ -1,0 +1,44 @@
+[Unit]
+Description=Podman container-gitea-db.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+Type=notify
+NotifyAccess=all
+
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+
+ExecStart=/usr/bin/podman run \
+	--cidfile=%t/%n.ctr-id \
+	--cgroups=no-conmon \
+	--rm \
+	--sdnotify=conmon \
+	--replace \
+	--detach \
+	--tty \
+	--label "io.containers.autoupdate=registry" \
+	--volume gitea-db:/var/lib/mysql/:Z \
+	--network=gitea \
+	--env MARIADB_RANDOM_ROOT_PASSWORD=true \
+	--env MARIADB_DATABASE={{ gitea_db_name }} \
+	--env MARIADB_USER={{ gitea_db_user }} \
+	--env MARIADB_PASSWORD={{ gitea_db_pass }} \
+	--name=gitea-db \
+	{{ gitea_db_image_name }}:{{ gitea_db_image_tag }}
+
+ExecStop=/usr/bin/podman stop \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+ExecStopPost=/usr/bin/podman rm \
+	--force --ignore \
+	--cidfile=%t/%n.ctr-id
+
+[Install]
+WantedBy=default.target

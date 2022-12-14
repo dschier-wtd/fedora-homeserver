@@ -1,0 +1,50 @@
+[Unit]
+Description=Podman container-gitea-app.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+Type=notify
+NotifyAccess=all
+
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+
+ExecStart=/usr/bin/podman run \
+	--cidfile=%t/%n.ctr-id \
+	--cgroups=no-conmon \
+	--rm \
+	--sdnotify=conmon \
+	--replace \
+	--publish {{ gitea_publish_http }}:3000/tcp \
+	--publish {{ gitea_publish_ssh }}:2222/tcp \
+	--detach \
+	--tty \
+	--label "io.containers.autoupdate=registry" \
+	--volume gitea-app-data:/data/:Z \
+	--volume gitea-app-conf:/etc/gitea/:Z \
+	--network=gitea \
+	--env GITEA__database__NAME={{ gitea_db_name }} \
+	--env GITEA__database__USER={{ gitea_db_user }} \
+	--env GITEA__database__PASSWD={{ gitea_db_pass }} \
+	--env GITEA__database__DB_TYPE=mysql \
+	--env GITEA__database__HOST=gitea-db:3306 \
+	--env GITEA__service__DISABLE_REGISTRATION=true \
+	--name=gitea-app \
+	{{ gitea_app_image_name }}:{{ gitea_app_image_tag }}
+
+ExecStop=/usr/bin/podman stop \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+ExecStopPost=/usr/bin/podman rm \
+	--force \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+[Install]
+WantedBy=default.target

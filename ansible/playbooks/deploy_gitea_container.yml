@@ -1,0 +1,90 @@
+---
+# ansible/playbooks/deploy_gitea_container.yml
+
+- name: "Deploy gitea Container"
+  hosts: "all"
+
+  vars:
+    gitea_publish_http: "3000"
+    gitea_publish_ssh: "2222"
+
+    gitea_net_name: "gitea"
+
+    ## Database Management
+
+    gitea_db_image_name: "docker.io/library/mariadb"
+    gitea_db_image_tag: "10"
+    gitea_db_image_auto_update: true
+
+    gitea_db_name: "gitea"
+    gitea_db_user: "gitea"
+    gitea_db_pass: "password"
+
+    ## App Management
+
+    gitea_app_image_name: "docker.io/gitea/gitea"
+    gitea_app_image_tag: "1"
+    gitea_app_image_auto_update: true
+
+  tasks:
+
+    # Network
+
+    - name: "Create gitea Podman Network"
+      containers.podman.podman_network:
+        name: "{{ gitea_net_name }}"
+        state: "present"
+      become: true
+
+    ## Database
+
+    - name: "Pull gitea-db Image"
+      containers.podman.podman_image:
+        name: "{{ gitea_db_image_name }}"
+        tag: "{{ gitea_db_image_tag }}"
+        state: "present"
+      become: true
+
+    - name: "Create gitea-db Service File"
+      ansible.builtin.template:
+        src: "container-gitea-db.service.j2"
+        dest: "/etc/systemd/system/container-gitea-db.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+
+    - name: "Start & Enable gitea-db Service"
+      ansible.builtin.systemd:
+        name: "container-gitea-db.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
+
+    ## Application
+
+    - name: "Pull gitea-app Image"
+      containers.podman.podman_image:
+        name: "{{ gitea_app_image_name }}"
+        tag: "{{ gitea_app_image_tag }}"
+        state: "present"
+      become: true
+
+    - name: "Create gitea-app Service File"
+      ansible.builtin.template:
+        src: "container-gitea-app.service.j2"
+        dest: "/etc/systemd/system/container-gitea-app.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+
+    - name: "Start & Enable gitea-app Service"
+      ansible.builtin.systemd:
+        name: "container-gitea-app.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
+...
