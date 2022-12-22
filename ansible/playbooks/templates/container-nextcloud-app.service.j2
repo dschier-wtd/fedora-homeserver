@@ -1,0 +1,49 @@
+[Unit]
+Description=Podman container-nextcloud-app.service
+Documentation=man:podman-generate-systemd(1)
+Wants=network-online.target
+After=network-online.target
+RequiresMountsFor=%t/containers
+
+[Service]
+Environment=PODMAN_SYSTEMD_UNIT=%n
+Restart=on-failure
+TimeoutStopSec=70
+Type=notify
+NotifyAccess=all
+
+ExecStartPre=/bin/rm -f %t/%n.ctr-id
+
+ExecStart=/usr/bin/podman run \
+	--cidfile=%t/%n.ctr-id \
+	--cgroups=no-conmon \
+	--rm \
+	--sdnotify=conmon \
+	--replace \
+	--publish {{ nextcloud_publish_http }}:80/tcp \
+	--detach \
+	--tty \
+	--label "io.containers.autoupdate=registry" \
+	--volume nextcloud-app:/var/www/html/:Z \
+	--network={{ nextcloud_net_name }} \
+	--env MYSQL_DATABASE={{ nextcloud_db_name }} \
+	--env MYSQL_USER={{ nextcloud_db_user }} \
+	--env MYSQL_PASSWORD={{ nextcloud_db_pass }} \
+	--env MYSQL_HOST=nextcloud-db \
+	--env NEXTCLOUD_ADMIN_USER={{ nextcloud_app_user }} \
+	--env NEXTCLOUD_ADMIN_PASSWORD={{ nextcloud_app_pass }} \
+	--name=nextcloud-app \
+	{{ nextcloud_app_image_name }}:{{ nextcloud_app_image_tag }}
+
+ExecStop=/usr/bin/podman stop \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+ExecStopPost=/usr/bin/podman rm \
+	--force \
+	--ignore \
+	--cidfile=%t/%n.ctr-id
+
+[Install]
+WantedBy=default.target
+

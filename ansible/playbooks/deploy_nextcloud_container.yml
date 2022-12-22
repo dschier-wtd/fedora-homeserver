@@ -1,0 +1,92 @@
+---
+# ansible/playbooks/deploy_nextcloud_container.yml
+
+- name: "Deploy nextcloud Container"
+  hosts: "all"
+
+  vars:
+    nextcloud_publish_http: "8080"
+
+    nextcloud_net_name: "nextcloud"
+
+    ## Database Management
+
+    nextcloud_db_image_name: "docker.io/library/mariadb"
+    nextcloud_db_image_tag: "10"
+    nextcloud_db_image_auto_update: true
+
+    nextcloud_db_name: "nextcloud"
+    nextcloud_db_user: "nextcloud"
+    nextcloud_db_pass: "password"
+
+    ## Application Management
+
+    nextcloud_app_image_name: "docker.io/library/nextcloud"
+    nextcloud_app_image_tag: "25"
+    nextcloud_app_image_auto_update: true
+
+    nextcloud_app_user: "nextcloud"
+    nextcloud_app_pass: "password"
+
+  tasks:
+
+    # Network Management
+
+    - name: "Create nextcloud Podman Network"
+      containers.podman.podman_network:
+        name: "{{ nextcloud_net_name }}"
+        state: "present"
+      become: true
+
+    ## Database Management
+
+    - name: "Pull nextcloud-db Image"
+      containers.podman.podman_image:
+        name: "{{ nextcloud_db_image_name }}"
+        tag: "{{ nextcloud_db_image_tag }}"
+        state: "present"
+      become: true
+
+    - name: "Create nextcloud-db Service File"
+      ansible.builtin.template:
+        src: "container-nextcloud-db.service.j2"
+        dest: "/etc/systemd/system/container-nextcloud-db.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+
+    - name: "Start & Enable nextcloud-db Service"
+      ansible.builtin.systemd:
+        name: "container-nextcloud-db.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
+
+    ## Application Management
+
+    - name: "Pull nextcloud-app Image"
+      containers.podman.podman_image:
+        name: "{{ nextcloud_app_image_name }}"
+        tag: "{{ nextcloud_app_image_tag }}"
+        state: "present"
+      become: true
+
+    - name: "Create nextcloud-app Service File"
+      ansible.builtin.template:
+        src: "container-nextcloud-app.service.j2"
+        dest: "/etc/systemd/system/container-nextcloud-app.service"
+        owner: "root"
+        group: "root"
+        mode: 0644
+      become: true
+
+    - name: "Start & Enable nextcloud-app Service"
+      ansible.builtin.systemd:
+        name: "container-nextcloud-app.service"
+        state: "started"
+        enabled: true
+        daemon_reload: true
+      become: true
+...
