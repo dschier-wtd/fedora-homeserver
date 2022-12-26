@@ -2,7 +2,7 @@
 # reference: https://cirrus-ci.org/guide/writing-tasks/
 
 container:
-  cpu: 1
+  cpu: 2
   memory: "2G"
 
 # Sanity checks
@@ -23,16 +23,18 @@ lint_yaml_task:
 lint_ansible_task:
   name: "Lint Ansible"
   container:
-    image: "quay.io/ansible/creator-ee:latest"
-  install_script: "ansible-galaxy collection install
-                  -r ansible/requirements.yml"
+    image: "docker.io/library/python:3"
+  install_script: "pip install ansible-lint"
+  dependency_script: "ansible-galaxy collection install
+                    -r ansible/requirements.yml"
   lint_script: "ansible-lint ansible/"
 
 test_ansible_task:
   name: "Check Ansible"
   container:
-    image: "quay.io/ansible/creator-ee:latest"
-  install_script: "ansible-galaxy collection install
+    image: "docker.io/library/python:3"
+  install_script: "pip install ansible"
+  dependency_script: "ansible-galaxy collection install
                   -r ansible/requirements.yml"
   test_configure_script: "ansible-playbook --syntax-check
                           ansible/playbooks/configure.yml"
@@ -42,7 +44,7 @@ test_ansible_task:
 lint_kickstart_task:
   name: "Lint Kickstart"
   container:
-    image: "docker.io/library/fedora:35"
+    image: "docker.io/library/fedora:37"
   install_script: "dnf in -y pykickstart"
   lint_base_script: "ksvalidator -i kickstart/base_ks.cfg"
   lint_full_script: "ksvalidator -i kickstart/full_ks.cfg"
