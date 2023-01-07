@@ -1,0 +1,15 @@
+---
+# ansible/playbooks/deploy_homer_container.yml
+
+- name: "Deploy homer Container"
+  hosts: "all"
+
+  tasks:
+
+    - name: "Import homer Role"
+      ansible.builtin.import_role:
+        name: "whiletruedoio.container.homer"
+      vars:
+        homer_config_src: "templates/homer_config.yml.j2"
+        homer_publish_http: "5000"
+...

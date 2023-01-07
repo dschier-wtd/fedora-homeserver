@@ -7,4 +7,7 @@ collections:
   - name: "community.general"
   - name: "community.libvirt"
   - name: "containers.podman"
+  - name: "https://github.com/whiletruedoio/whiletruedoio.container.git"
+    type: "git"
+    version: "a5926340b467ecd8f5c172c448bb198fb7c618db"
 ...

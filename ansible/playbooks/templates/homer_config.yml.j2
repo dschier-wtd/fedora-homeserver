@@ -1,0 +1,58 @@
+---
+# ansible/playbooks/templates/homer_config.yml.j2
+
+title: "Home Server"
+subtitle: "My Fedora homeserver"
+icon: "fas fa-home-heart"
+
+header: true
+
+defaults:
+  layout: "list"
+  colorTheme: "auto"
+
+theme: "default"
+
+links:
+  - name: "Blog"
+    icon: "fas fa-newspaper"
+    url: "https://while-true-do.io"
+    target: "_blank"
+  - name: "Code"
+    icon: "fab fa-github"
+    url: "https://github.com/dschier-wtd/fedora-homeserver/"
+    target: "_blank"
+
+services:
+  - name: "Applications"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Nextcloud"
+        icon: "fas fa-cloud"
+        subtitle: "Sync files, calendar, contacts and more"
+        keywords: "files calendar contacts tasks"
+        url: "http://{{ ansible_default_ipv4.address }}:8080"
+        target: "_blank"
+      - name: "Gitea"
+        icon: "fas fa-code"
+        subtitle: "Platform for projects, code and issues"
+        keywords: "code issues projects"
+        url: "http://{{ ansible_default_ipv4.address }}:3000"
+        target: "_blank"
+      - name: "PiHole"
+        icon: "fas fa-network-wired"
+        subtitle: "Ad Block and DNS"
+        keywords: "adds dns filter"
+        url: "http://{{ ansible_default_ipv4.address }}"
+        target: "_blank"
+
+  - name: "Admin"
+    icon: "fas fa-cloud"
+    items:
+      - name: "Cockpit"
+        icon: "fas fa-tachometer-alt"
+        subtitle: "Administer the home server"
+        keywords: "linux podman updates"
+        url: "https://{{ ansible_default_ipv4.address }}:9090"
+        target: "_blank"
+...
